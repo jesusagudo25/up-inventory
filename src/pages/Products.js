@@ -1,0 +1,208 @@
+import React, { useState } from 'react'
+import { useParams } from "react-router-dom";
+
+// material
+import { Card, Container, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography, Button, IconButton, DialogActions, Box, Dialog, DialogContent, Slide } from '@mui/material';
+
+import Iconify from '../components/iconify/Iconify';
+import { ListHead } from '../components/table/ListHead';
+// mock
+import SUPPLIERSLIST from '../_mock/suppliers';
+import { Stack } from '@mui/material';
+import { Link } from 'react-router-dom';
+
+// ----------------------------------------------------------------------
+
+const TABLE_HEAD = [
+  { id: 'name', label: 'Name', alignRight: false },
+  { id: 'price', label: 'Price', alignRight: false },
+  { id: '' },
+];
+
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
+
+export const Products = () => {
+  
+  const { id } = useParams();
+
+  const [products, setProducts] = useState(SUPPLIERSLIST.find(supplier => supplier.id === id).products);
+
+  const [open, setOpen] = useState(true);
+
+  const [page, setPage] = useState(0);
+
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - products.length) : 0;
+
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPage(0);
+    setRowsPerPage(parseInt(event.target.value, 10));
+  };
+
+  return (
+    <Container>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Typography variant="h4" gutterBottom>
+          Products
+        </Typography>
+        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+          New Product
+        </Button>
+      </Stack>
+
+      <Card>
+        <TableContainer sx={{ minWidth: 800 }}>
+          <Table>
+            <ListHead
+              headLabel={TABLE_HEAD}
+            />
+            <TableBody>
+              {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                const { id, name, price } = row;
+
+                return (
+                  <TableRow hover key={id} tabIndex={-1}>
+
+                    <TableCell component="th" scope="row" padding="1">
+                      <Typography variant="subtitle2">
+                        {name}
+                      </Typography>
+                    </TableCell>
+
+                    <TableCell align="left">{price}</TableCell>
+
+                    <TableCell align="right">
+                      <IconButton size="large" color="primary">
+                        <Iconify icon="bx:bxs-pencil" />
+                      </IconButton>
+
+                      <IconButton size="large" color="error">
+                        <Iconify icon="bx:bxs-trash" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={products.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Card>
+
+      {/* Dialog - report result */}
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
+        fullWidth
+        maxWidth='sm'
+      >
+        <DialogContent dividers>
+
+          <Stack
+            direction="column"
+            sx={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            <Box sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+              <Iconify icon="mdi:check-circle" color="#4caf50" width="130px" height="130px" />
+            </Box>
+
+            <Stack
+              direction="row"
+              sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                gap: 1,
+                marginTop: 1,
+              }}
+            >
+              {/* Details */}
+              <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>Selected month:</Typography>
+
+              <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>111</Typography>
+
+            </Stack>
+
+            <Typography variant="h4" sx={{
+              fontWeight: '600',
+              marginTop: 2,
+            }}>Payroll generated successfully</Typography>
+
+            <Typography variant="h6" sx={{
+              marginY: 2,
+              fontWeight: '400'
+            }}>You can download the payroll in PDF format</Typography>
+
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              download
+              style={{ textDecoration: 'none' }}
+            >
+              <Button variant="contained"
+                size='large'
+                sx={{
+                  width: '100%',
+                }}
+                color="error"
+                startIcon={<Iconify icon="mdi:file-pdf" />}
+              >
+                Descargar
+              </Button>
+            </a>
+
+          </Stack>
+
+      </DialogContent>
+      <DialogActions
+        sx={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Button
+          variant="contained"
+          size='large'
+          sx={{
+            margin: 2,
+          }}
+          onClick={() => {
+            setOpen(false);
+          }}
+        >Cerrar</Button>
+      </DialogActions>
+    </Dialog>
+    </Container >
+  )
+}

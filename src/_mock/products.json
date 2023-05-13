@@ -1,0 +1,56 @@
+[
+    {
+        "id": 1,
+        "name": "Zapatillas Nike Air Max 90",
+        "price": "99.00",
+        "stock": 5
+    },
+    {
+        "id": 2,
+        "name": "Zapatillas Nike Off White",
+        "price": "99.00",
+        "stock": 5
+    },
+    {
+        "id": 3,
+        "name": "Zapatillas Nike Vapormax",
+        "price": "99.00",
+        "stock": 5
+    },
+    {
+        "id": 4,
+        "name": "Zapatillas New Balance 574",
+        "price": "99.00",
+        "stock": 5
+    },
+    {
+        "id": 5,
+        "name": "Zapatillas Rebook Classic",
+        "price": "99.00",
+        "stock": 5
+    },
+    {
+        "id": 6,
+        "name": "Zapatillas Vans Old Skool",
+        "price": "99.00",
+        "stock": 5
+    },
+    {
+        "id": 7,
+        "name": "Zapatillas Adidas kanye west",
+        "price": "99.00",
+        "stock": 5
+    },
+    {
+        "id": 8,
+        "name": "Zapatillas Adidas Yeezy",
+        "price": "99.00",
+        "stock": 5
+    },
+    {
+        "id": 9,
+        "name": "Zapatillas Nike react",
+        "price": "99.00",
+        "stock": 5
+    }
+]

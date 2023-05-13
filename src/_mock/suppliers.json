@@ -1,0 +1,50 @@
+[
+    {
+        "id": "1",
+        "name": "John Doe",
+        "address": "123 Main St",
+        "phone": "555-555-5555",
+        "email": "jd@exmaple.com",
+        "products": [
+            {
+                "id": "1",
+                "name": "Nike Irmax 90",
+                "price": "99.99"
+            },
+            {
+                "id": "2",
+                "name": "Nike Irmax 95",
+                "price": "129.99"
+            },
+            {
+                "id": "3",
+                "name": "Nike Irmax 97",
+                "price": "149.99"
+            }
+        ]
+    },
+    {
+        "id": "2",
+        "name": "Jane Doe",
+        "address": "123 Main St",
+        "phone": "555-555-5555",
+        "email": "td@example.com",
+        "products": [
+            {
+                "id": "1",
+                "name": "Nike Irmax 90",
+                "price": "99.99"
+            },
+            {
+                "id": "2",
+                "name": "Nike Irmax 95",
+                "price": "129.99"
+            },
+            {
+                "id": "3",
+                "name": "Nike Irmax 97",
+                "price": "149.99"
+            }
+        ]
+    }
+]
