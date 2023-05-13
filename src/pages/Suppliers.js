@@ -92,7 +92,7 @@ export const Suppliers = () => {
 
                     <TableCell align="right">
                       <Link
-                        to={`/suppliers/${id}/products`}
+                        to={`./${id}/products`}
                         style={{ textDecoration: 'none', color: 'inherit' }}
                       >
                         <IconButton size="large" color="inherit">
