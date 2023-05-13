@@ -2,8 +2,7 @@ import React, { useRef } from 'react';
 // material
 import { Autocomplete, TextField } from '@mui/material';
 
-import SUPPLIERSLIST from '../../_mock/suppliers';
-import { ProductContext } from '../../hooks/ProductContext';
+import { ProductContext } from '../../contexts/ProductContext';
 
 export const SearchProducts = () => {
 
@@ -15,13 +14,27 @@ export const SearchProducts = () => {
     setListProducts,
   } = React.useContext(ProductContext)
 
+  const [suppliers, setSuppliers] = React.useState([])
+
+  const getSuppliers = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/mock/suppliers.json`)
+      .then(response => response.json())  
+      .then(data => {
+        setSuppliers(data)
+      })
+  }
+
+  React.useEffect(() => {
+    getSuppliers()
+  }, [])
+
   return (
     <Autocomplete
       id="products-search"
       value={product}
       disablePortal={false}
         options={
-            supplierId ? SUPPLIERSLIST.find(supplier => supplier.id === supplierId).products.map((option) => {
+            supplierId ? suppliers.find(supplier => supplier.id === supplierId).products.map((option) => {
                 return {
                     value: option.id,
                     label: option.name,
@@ -29,9 +42,10 @@ export const SearchProducts = () => {
             }) : []
         }
      onChange={(event, newValue) => {
+        if(newValue === null) return ''
         setProduct(newValue);
         setProductId(newValue.value)
-        setListProducts([...SUPPLIERSLIST.find(supplier => supplier.id === supplierId).products.filter(product => product.id === newValue.value)])
+        setListProducts([...suppliers.find(supplier => supplier.id === supplierId).products.filter(product => product.id === newValue.value)])
       }} 
       noOptionsText="No suppliers found"
       selectOnFocus

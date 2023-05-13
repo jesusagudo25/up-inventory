@@ -6,27 +6,27 @@ const icon = (name) => <SvgColor src={`/assets/icons/${name}.svg`} sx={{ width: 
 const navConfig = [
     {
       title: 'dashboard',
-      path: '/app',
+      path: '/dashboard/app',
       icon: icon('ic_dashboard'),
     },
     {
         title: 'suppliers',
-        path: '/suppliers',
+        path: '/dashboard/suppliers',
         icon: icon('ic_suppliers'),
     },
     {
         title: 'orders',
-        path: '/orders',
+        path: '/dashboard/orders',
         icon: icon('ic_orders'),
     },
     {
         title: 'checkouts',
-        path: '/checkout',
+        path: '/dashboard/checkout',
         icon: icon('ic_checkouts'),
     },
     {
         title: 'subsidiaries',
-        path: '/subsidiaries',
+        path: '/dashboard/subsidiaries',
         icon: icon('ic_subsidiaries'),
     },
 ];

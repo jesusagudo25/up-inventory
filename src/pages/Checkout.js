@@ -8,9 +8,9 @@ import { SearchSubsidiaries } from '../components/@checkouts/SearchSubsidiaries.
 import { SearchInventory } from '../components/@checkouts/SearchInventory.js'
 
 import { Cart } from '../components/@checkouts/Cart.js'
-import { CartContext } from '../hooks/CartContext.js'
-import { SubsidiaryContext } from '../hooks/SubsidiaryContext.js'
-import { ProductContext } from '../hooks/ProductContext.js';
+import { CartContext } from '../contexts/CartContext.js'
+import { SubsidiaryContext } from '../contexts/SubsidiaryContext.js'
+import { ProductContext } from '../contexts/ProductContext.js';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';

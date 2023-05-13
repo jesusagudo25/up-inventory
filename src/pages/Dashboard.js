@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Grid, Container, Typography, Card, TableContainer, Table, TableBody, TableRow, TableCell, IconButton, TablePagination } from '@mui/material'
 // components
 import { Widget } from '../components/@dashboard/Widget';
 import { ListHead } from '../components/table/ListHead';
 import Iconify from '../components/iconify/Iconify';
-// mock
-import PRODUCTS from '../_mock/products';
 
 // ----------------------------------------------------------------------
 
@@ -17,14 +15,14 @@ const TABLE_HEAD = [
 ];
 
 export const Dashboard = () => {
-  
-  const [open, setOpen] = useState(true);
+
+  const [inventory, setInventory] = useState([]);
 
   const [page, setPage] = useState(0);
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - PRODUCTS.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - inventory.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -34,6 +32,22 @@ export const Dashboard = () => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
   };
+
+  const getInventory = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/mock/products.json`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((data) => setInventory(data));
+  };
+
+  useEffect(() => {
+    getInventory();
+  }, []);
 
   return (
     <div>
@@ -68,7 +82,7 @@ export const Dashboard = () => {
                 headLabel={TABLE_HEAD}
               />
               <TableBody>
-                {PRODUCTS.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                {inventory.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                   const { id, name, price, stock } = row;
 
                   return (
@@ -108,7 +122,7 @@ export const Dashboard = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={PRODUCTS.length}
+            count={inventory.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

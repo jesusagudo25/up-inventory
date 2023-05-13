@@ -2,14 +2,12 @@ import React, { useState } from 'react'
 import { useParams } from "react-router-dom";
 
 // material
-import { Card, Container, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography, Button, IconButton, DialogActions, Box, Dialog, DialogContent, Slide } from '@mui/material';
+import { Card, Container, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography, Button, IconButton} from '@mui/material';
 
 import Iconify from '../components/iconify/Iconify';
 import { ListHead } from '../components/table/ListHead';
 // mock
-import SUPPLIERSLIST from '../_mock/suppliers';
 import { Stack } from '@mui/material';
-import { Link } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
@@ -19,15 +17,11 @@ const TABLE_HEAD = [
   { id: '' },
 ];
 
-const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
-
 export const Products = () => {
   
   const { id } = useParams();
 
-  const [products, setProducts] = useState(SUPPLIERSLIST.find(supplier => supplier.id === id).products);
-
-  const [open, setOpen] = useState(true);
+  const [products, setProducts] = useState([]);
 
   const [page, setPage] = useState(0);
 
@@ -44,6 +38,22 @@ export const Products = () => {
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
   };
+
+  const getProducts = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/mock/suppliers.json`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      .then((data) => setProducts(data.find(supplier => supplier.id === id).products));
+  };
+
+  React.useEffect(() => {
+    getProducts();
+  }, []);
 
   return (
     <Container>
@@ -109,100 +119,6 @@ export const Products = () => {
         />
       </Card>
 
-      {/* Dialog - report result */}
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        aria-describedby="alert-dialog-slide-description"
-        fullWidth
-        maxWidth='sm'
-      >
-        <DialogContent dividers>
-
-          <Stack
-            direction="column"
-            sx={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <Box sx={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-              <Iconify icon="mdi:check-circle" color="#4caf50" width="130px" height="130px" />
-            </Box>
-
-            <Stack
-              direction="row"
-              sx={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                gap: 1,
-                marginTop: 1,
-              }}
-            >
-              {/* Details */}
-              <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>Selected month:</Typography>
-
-              <Typography variant="subtitle1" sx={{ fontWeight: '600' }}>111</Typography>
-
-            </Stack>
-
-            <Typography variant="h4" sx={{
-              fontWeight: '600',
-              marginTop: 2,
-            }}>Payroll generated successfully</Typography>
-
-            <Typography variant="h6" sx={{
-              marginY: 2,
-              fontWeight: '400'
-            }}>You can download the payroll in PDF format</Typography>
-
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              download
-              style={{ textDecoration: 'none' }}
-            >
-              <Button variant="contained"
-                size='large'
-                sx={{
-                  width: '100%',
-                }}
-                color="error"
-                startIcon={<Iconify icon="mdi:file-pdf" />}
-              >
-                Descargar
-              </Button>
-            </a>
-
-          </Stack>
-
-      </DialogContent>
-      <DialogActions
-        sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Button
-          variant="contained"
-          size='large'
-          sx={{
-            margin: 2,
-          }}
-          onClick={() => {
-            setOpen(false);
-          }}
-        >Cerrar</Button>
-      </DialogActions>
-    </Dialog>
     </Container >
   )
 }

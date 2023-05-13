@@ -1,9 +1,7 @@
 import React from 'react'
 import { Autocomplete, TextField } from '@mui/material';
 
-import SUBSIDIARIES from '../../_mock/subsidiaries';
-
-import { SubsidiaryContext } from '../../hooks/SubsidiaryContext.js';
+import { SubsidiaryContext } from '../../contexts/SubsidiaryContext.js';
 
 export const SearchSubsidiaries = () => {
   const { subsidiary
@@ -11,18 +9,33 @@ export const SearchSubsidiaries = () => {
     setSubsidiaryId
   } = React.useContext(SubsidiaryContext)
 
+  const [subsidiaries, setSubsidiaries] = React.useState([])
+
+  const getSubsidiaries = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/mock/subsidiaries.json`)
+      .then(response => response.json())
+      .then(data => {
+        setSubsidiaries(data)
+      })
+  }
+
+  React.useEffect(() => {
+    getSubsidiaries()
+  }, [])
+
   return (
     <Autocomplete
       id="subsidiaries-search"
       value={subsidiary}
       disablePortal={false}
-      options={SUBSIDIARIES.map((option) => {
+      options={subsidiaries.map((option) => {
         return {
           value: option.id,
           label: option.name,
         };
       } )}
        onChange={(event, newValue) => {
+        if(newValue === null) return ''
         setSubsidiary(newValue);
         setSubsidiaryId(newValue.value)
       }}

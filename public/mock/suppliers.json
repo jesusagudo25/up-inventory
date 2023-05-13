@@ -32,17 +32,17 @@
         "products": [
             {
                 "id": "1",
-                "name": "Nike Irmax 90",
+                "name": "Adidas Kicks",
                 "price": "99.99"
             },
             {
                 "id": "2",
-                "name": "Nike Irmax 95",
+                "name": "Adidas running",
                 "price": "129.99"
             },
             {
                 "id": "3",
-                "name": "Nike Irmax 97",
+                "name": "Adidas walking",
                 "price": "149.99"
             }
         ]

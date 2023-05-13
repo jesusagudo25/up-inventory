@@ -3,7 +3,7 @@ import React from 'react'
 import { TableBody, TableRow, TableCell, Typography, FormControl, TextField, IconButton, Box, } from '@mui/material'
 import Iconify from '../iconify/Iconify.js'
 
-import { CartContext } from '../../hooks/CartContext.js'
+import { CartContext } from '../../contexts/CartContext.js'
 
 export const Cart = () => {
 
@@ -28,7 +28,7 @@ export const Cart = () => {
                                         type="number"
                                         value={quantity}
                                         onChange={(e) => {
-                                            e.target.value > stock ? setQuantity(stock) : setQuantity(e.target.value)
+                                            e.target.value > stock ? setQuantity(stock) : e.target.value < 1 ? setQuantity(1) : setQuantity(e.target.value)
                                         }}
                                     />
                                 </FormControl>

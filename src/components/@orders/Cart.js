@@ -3,7 +3,7 @@ import React from 'react'
 import { TableBody, TableRow, TableCell, Typography, FormControl, TextField, IconButton, Box, } from '@mui/material'
 import Iconify from '../iconify/Iconify.js'
 
-import { CartContext } from '../../hooks/CartContext.js'
+import { CartContext } from '../../contexts/CartContext.js'
 
 export const Cart = () => {
 

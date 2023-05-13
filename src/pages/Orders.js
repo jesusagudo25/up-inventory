@@ -9,9 +9,9 @@ import { SearchSuppliers } from '../components/@orders/SearchSuppliers.js'
 import { SearchProducts } from '../components/@orders/SearchProducts.js'
 
 import { Cart } from '../components/@orders/Cart.js'
-import { CartContext } from '../hooks/CartContext.js'
-import { ProductContext } from '../hooks/ProductContext.js';
-import { SupplierContext } from '../hooks/SupplierContext.js';
+import { CartContext } from '../contexts/CartContext.js'
+import { ProductContext } from '../contexts/ProductContext.js';
+import { SupplierContext } from '../contexts/SupplierContext.js';
 
 import { ListHead } from '../components/table/ListHead.js'
 

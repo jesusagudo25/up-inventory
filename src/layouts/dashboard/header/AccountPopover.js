@@ -1,15 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
+import { Box, Divider, Typography, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-// Mocks
-import account from '../../../_mock/account';
+// custom hooks
+import { useLocalStorage } from '../../../hooks/useLocalStorage.js';
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+
+    const navigate = useNavigate();
+
     const [open, setOpen] = useState(null);
+
+    const [token, setToken] = useLocalStorage('token', '')
+    const [emailLS, setEmailLS] = useLocalStorage('email', '')
+    const [passwordLS, setPasswordLS] = useLocalStorage('password', '')
 
     const handleOpen = (event) => {
         setOpen(event.currentTarget);
@@ -18,6 +26,12 @@ export default function AccountPopover() {
     const handleClose = () => {
         setOpen(null);
     };
+
+    useEffect(() => {
+        if (token === '') {
+            navigate('/login', { replace: true })
+        }
+    }, [])
 
     return (
         <>
@@ -38,7 +52,7 @@ export default function AccountPopover() {
                     }),
                 }}
             >
-                <Avatar src={account.photoURL} alt="photoURL" />
+                <Avatar src={`https://i.pravatar.cc/300`} alt="photoURL" />
             </IconButton>
 
             <Popover
@@ -61,14 +75,22 @@ export default function AccountPopover() {
                 }}
             >
                 <Box sx={{ my: 1.5, px: 2.5 }}>
-                    <Typography variant="subtitle2" noWrap>
-                        {account.displayName}
-                    </Typography>
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                        {account.email}
+                        {emailLS}
                     </Typography>
                 </Box>
 
+                <Divider sx={{ borderStyle: 'dashed' }} />
+
+                <MenuItem sx={{ m: 1 }} onClick={() => {
+                    setToken('')
+                    setEmailLS('')
+                    setPasswordLS('')
+                    handleClose()
+                    navigate('/login', { replace: true })
+                }}>
+                    Logout
+                </MenuItem>
             </Popover>
         </>
     );

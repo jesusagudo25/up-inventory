@@ -2,8 +2,7 @@ import React from 'react';
 // material
 import { Autocomplete, TextField } from '@mui/material';
 
-import SUPPLIERSLIST from '../../_mock/suppliers';
-import { SupplierContext } from '../../hooks/SupplierContext';
+import { SupplierContext } from '../../contexts/SupplierContext';
 
 export const SearchSuppliers = () => {
 
@@ -12,18 +11,33 @@ export const SearchSuppliers = () => {
     setSupplierId
   } = React.useContext(SupplierContext)
 
+  const [suppliers, setSuppliers] = React.useState([])
+
+  const getSuppliers = () => {
+    fetch(`${process.env.REACT_APP_API_URL}/mock/suppliers.json`)
+      .then(response => response.json())
+      .then(data => {
+        setSuppliers(data)
+      })
+  }
+
+  React.useEffect(() => {
+    getSuppliers()
+  }, [])
+
   return (
     <Autocomplete
       id="suppliers-search"
       value={supplier}
       disablePortal={false}
-      options={SUPPLIERSLIST.map((option) => {
+      options={suppliers.map((option) => {
         return {
           value: option.id,
           label: option.name,
         };
       } )}
        onChange={(event, newValue) => {
+        if(newValue === null) return ''
         setSupplier(newValue);
         setSupplierId(newValue.value)
       }}

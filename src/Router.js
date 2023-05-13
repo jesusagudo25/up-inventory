@@ -9,12 +9,13 @@ import { Checkout } from './pages/Checkout'
 import { Subsidiaries } from './pages/Subsidiaries'
 import { Dashboard } from './pages/Dashboard'
 import { Notfound } from './pages/Notfound'
+import { Login } from './pages/Login'
 
 export const Router = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<DashboardLayout />} >
+                <Route path="/dashboard" element={<DashboardLayout />} >
                     <Route path="" element={<Navigate to="/app" />} />
                     <Route path="app" element={<Dashboard />} />
                     <Route path="suppliers" element={<Suppliers />} />
@@ -24,6 +25,9 @@ export const Router = () => {
                     <Route path="subsidiaries" element={<Subsidiaries />} />
                 </Route>
 
+                <Route path="/login" element={<Login  />} />
+
+                <Route path="/" element={<Navigate to="/login" />} />
                 <Route path="*" element={<Notfound />} />
             </Routes>
         </BrowserRouter>
