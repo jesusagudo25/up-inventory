@@ -17,7 +17,7 @@ const StyledContent = styled('div')(({ theme }) => ({
     justifyContent: 'center',
     flexDirection: 'column',
     padding: theme.spacing(12, 0),
-  }));
+}));
 
 export const Login = () => {
     return (

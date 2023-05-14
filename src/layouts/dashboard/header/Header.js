@@ -58,13 +58,10 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 
-export default function Header ({ onOpenNav }) {
+export default function Header () {
   return (
     <StyledRoot>
       <StyledToolbar>
-        <IconButton onClick={onOpenNav} sx={{ mr: 1, color: 'text.primary', display: { lg: 'none' } }}>
-          <Iconify icon="eva:menu-outline" width={24} height={24} />
-        </IconButton>
 
         <Box sx={{ flexGrow: 1 }} />
 

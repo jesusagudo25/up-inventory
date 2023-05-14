@@ -7,13 +7,12 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 
 import { SearchSuppliers } from '../components/@orders/SearchSuppliers.js'
 import { SearchProducts } from '../components/@orders/SearchProducts.js'
+import { Cart } from '../components/@orders/Cart.js';
+import { ListHead } from '../components/table/ListHead.js'
 
-import { Cart } from '../components/@orders/Cart.js'
 import { CartContext } from '../contexts/CartContext.js'
 import { ProductContext } from '../contexts/ProductContext.js';
 import { SupplierContext } from '../contexts/SupplierContext.js';
-
-import { ListHead } from '../components/table/ListHead.js'
 
 const TABLE_HEAD = [
   { id: 'description', label: 'Description', alignRight: false },

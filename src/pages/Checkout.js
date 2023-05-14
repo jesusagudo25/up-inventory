@@ -1,20 +1,19 @@
 import React from 'react'
 
-import { Container, Stack, Typography, Card, FormControl, TableContainer, Table, Button, Box, Dialog, DialogContent, DialogActions, Slide } from '@mui/material'
-import Iconify from '../components/iconify/Iconify.js'
-import { ListHead } from '../components/table/ListHead.js'
-
-import { SearchSubsidiaries } from '../components/@checkouts/SearchSubsidiaries.js'
-import { SearchInventory } from '../components/@checkouts/SearchInventory.js'
-
-import { Cart } from '../components/@checkouts/Cart.js'
-import { CartContext } from '../contexts/CartContext.js'
-import { SubsidiaryContext } from '../contexts/SubsidiaryContext.js'
-import { ProductContext } from '../contexts/ProductContext.js';
-
+import { Container, Stack, Typography, Card, FormControl, TableContainer, Table, Button, Box, Dialog, DialogContent, DialogActions, Slide } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+
+import Iconify from '../components/iconify/Iconify.js'
+import { ListHead } from '../components/table/ListHead.js'
+import { SearchSubsidiaries } from '../components/@checkouts/SearchSubsidiaries.js'
+import { SearchInventory } from '../components/@checkouts/SearchInventory.js'
+import { Cart } from '../components/@checkouts/Cart.js'
+
+import { CartContext } from '../contexts/CartContext.js'
+import { SubsidiaryContext } from '../contexts/SubsidiaryContext.js'
+import { ProductContext } from '../contexts/ProductContext.js';
 
 const TABLE_HEAD = [
   { id: 'description', label: 'Description', alignRight: false },
