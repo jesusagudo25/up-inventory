@@ -1,9 +1,6 @@
 //@ mui
 import { styled,alpha } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar, IconButton } from '@mui/material';
-
-// components
-import Iconify from '../../../components/iconify/Iconify';
+import { Box, Stack, AppBar, Toolbar } from '@mui/material';
 
 //
 import AccountPopover from './AccountPopover';

@@ -41,7 +41,7 @@ export const SearchInventory = () => {
         setInventoryId(newValue.value)
         setListProducts([...products.filter(product => product.id === newValue.value)])
       }}
-      noOptionsText="No suppliers found"
+      noOptionsText="No products found"
       selectOnFocus
       clearOnBlur
       handleHomeEndKeys
@@ -53,11 +53,11 @@ export const SearchInventory = () => {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Search Supplier"
+          label="Search Product"
           InputLabelProps={{
             shrink: true,
           }}
-          placeholder="Enter Supplier Name"
+          placeholder="Enter product name"
         />
       )}
     />
