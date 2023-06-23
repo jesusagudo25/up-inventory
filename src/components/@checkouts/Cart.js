@@ -37,7 +37,7 @@ export const Cart = () => {
                             <TableCell align="right" width="5%">
                                 <IconButton size="large" color="inherit" onClick={() => {
                                     setListProducts([...listProducts.filter(product => product.id !== id)])
-                                    setQuantity(1)
+                                    setQuantity('')
                                     setInventoryId('')
                                     setInventory('')
                                 }} >

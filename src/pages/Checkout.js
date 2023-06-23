@@ -31,7 +31,7 @@ export const Checkout = () => {
   const [listProducts, setListProducts] = React.useState([])
   const [inventoryId, setInventoryId] = React.useState('')
   const [inventory, setInventory] = React.useState('')
-  const [quantity, setQuantity] = React.useState(1)
+  const [quantity, setQuantity] = React.useState('')
   const [date, setDate] = React.useState(new Date())
   return (
     <Container>
@@ -61,8 +61,8 @@ export const Checkout = () => {
           >
             <FormControl sx={{ width: '48%' }}>
               <SubsidiaryContext.Provider value={{
-                subsidiary
-                , setSubsidiary,
+                subsidiary,
+                setSubsidiary,
                 setSubsidiaryId
               }}>
                 <SearchSubsidiaries />
@@ -81,8 +81,8 @@ export const Checkout = () => {
             </FormControl>
             <FormControl sx={{ width: '100%' }}>
               <ProductContext.Provider value={{
-                inventory
-                , setInventory,
+                inventory,
+                setInventory,
                 setInventoryId,
                 setListProducts,
               }}>
@@ -107,26 +107,49 @@ export const Checkout = () => {
           {
             listProducts.length > 0 &&
             <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: '30px', }}>
-              <Button variant="contained" color="primary" onClick={() => {
-                setOpen(true);
-                /* Reset  */
-                setSubsidiary('')
-                setSubsidiaryId('')
-                setListProducts([])
-                setInventoryId('')
-                setInventory('')
-                setQuantity(1)
-                setDate(new Date())
+              <Button variant="contained" color="primary" onClick={async () => {
+                const data = {
+                  sucursalId: subsidiaryId,
+                  productoId: inventoryId,
+                  cantidad: quantity,
+                  fecha: date.toISOString(),
+                };
+
+                if(quantity > 0){
+
+                await fetch(`${process.env.REACT_APP_API_URL}/ms-operador/distribuciones`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(data),
+                })
+                  .then(response => response.json())
+                  .then(data => {
+                    setOpen(true);
+                    /* Reset  */
+                    setSubsidiary('')
+                    setSubsidiaryId('')
+                    setListProducts([])
+                    setInventoryId('')
+                    setInventory('')
+                    setQuantity('')
+                    setDate(new Date())
+                  });
+                }else{
+                  alert('The quantity must be greater than 0')
+                }
               }}>
                 Save
               </Button>
             </Stack>
           }
         </Container>
-      </Card>
+      </Card >
 
       {/* Dialog - result */}
-      <Dialog
+       {/* Dialog - result */}
+       <Dialog
         open={open}
         TransitionComponent={Transition}
         keepMounted
@@ -172,23 +195,6 @@ export const Checkout = () => {
               marginTop: 2,
             }}> Checkout completed</Typography>
 
-            <Typography variant="h6" sx={{
-              marginY: 2,
-              fontWeight: '400'
-            }}>You can download the PDF file with the details</Typography>
-
-
-            <Button variant="contained"
-              size='large'
-              sx={{
-                width: '25%',
-              }}
-              color="error"
-              startIcon={<Iconify icon="mdi:file-pdf" />}
-            >
-              Download
-            </Button>
-
           </Stack>
 
         </DialogContent>
@@ -211,6 +217,6 @@ export const Checkout = () => {
         </DialogActions>
       </Dialog>
 
-    </Container>
+    </Container >
   )
 }

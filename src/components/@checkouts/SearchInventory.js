@@ -1,45 +1,78 @@
-import React from 'react'
+import React, { useRef } from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 
 import { ProductContext } from '../../contexts/ProductContext.js';
 
 export const SearchInventory = () => {
-  const { inventory
-    , setInventory,
+  const {
+    inventory,
+    setInventory,
     setInventoryId,
     setListProducts,
   } = React.useContext(ProductContext)
 
-  const [products, setProducts] = React.useState([])
+  const previousController = useRef();
 
-  const getProducts = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/mock/products.json`)
-      .then(response => response.json())
-      .then(data => {
-        setProducts(data)
-      })
-  }
+  const [options, setOptions] = React.useState([]);
 
-  React.useEffect(() => {
-    getProducts()
-  }, [])
+  const getDataAutocomplete = (searchTerm) => {
+    if (previousController.current) {
+      previousController.current.abort();
+    }
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+    previousController.current = controller;
+
+    fetch(`${process.env.REACT_APP_API_URL}/ms-buscador/productos?nombre=${searchTerm}`, { signal })
+      .then((res) => res.json())
+      .then((data) => {
+        const results = data.map((item) => ({
+          value: item.codigo,
+          label: item.nombre,
+          stock: item.cantidad
+        }));
+        setOptions(results);
+      }
+      ).catch((err) => {
+        if (err.name === 'AbortError') {
+          console.log('Fetch aborted');
+        } else {
+          console.error(err);
+        }
+      }
+      );
+  };
 
   return (
     <Autocomplete
       id="inventories-search"
       value={inventory}
       disablePortal={false}
-      options={products.map((option) => {
-        return {
-          value: option.id,
-          label: option.name,
-        };
-      })}
+      options={options}
       onChange={(event, newValue) => {
-        if (newValue === null) return ''
-        setInventory(newValue);
-        setInventoryId(newValue.value)
-        setListProducts([...products.filter(product => product.id === newValue.value)])
+        setInventory(newValue?.label || '');
+        setInventoryId(newValue?.value || '')
+        if (newValue?.value) setListProducts([
+          {
+            id: newValue?.value,
+            name: newValue?.label,
+            stock: newValue?.stock
+          }
+        ])
+      }}
+      onInputChange={(event, newInputValue) => {
+        if (newInputValue !== '') setInventory(newInputValue);
+        if (event) {
+          setInventoryId('');
+          if (event?.target?.value?.length > 2) {
+            getDataAutocomplete(event.target.value);
+          }
+          else {
+            setOptions([]);
+          }
+        }
+
       }}
       noOptionsText="No products found"
       selectOnFocus

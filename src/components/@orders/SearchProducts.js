@@ -6,7 +6,7 @@ import { ProductContext } from '../../contexts/ProductContext';
 
 export const SearchProducts = () => {
 
-  const { 
+  const {
     supplierId,
     product,
     setProduct,
@@ -14,39 +14,73 @@ export const SearchProducts = () => {
     setListProducts,
   } = React.useContext(ProductContext)
 
-  const [suppliers, setSuppliers] = React.useState([])
+  const previousController = useRef();
 
-  const getSuppliers = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/mock/suppliers.json`)
-      .then(response => response.json())  
-      .then(data => {
-        setSuppliers(data)
-      })
-  }
+  const [options, setOptions] = React.useState([]);
 
-  React.useEffect(() => {
-    getSuppliers()
-  }, [])
+  const getDataAutocomplete = (searchTerm) => {
+    if (previousController.current) {
+      previousController.current.abort();
+    }
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+    previousController.current = controller;
+
+    if(!supplierId) return setOptions([]);
+
+    fetch(`${process.env.REACT_APP_API_URL}/ms-buscador/proveedores/${supplierId}/productos?nombre=${searchTerm}`, { signal })
+      .then((res) => res.json())
+      .then((data) => {
+        const results = data.map((item) => ({
+          value: item.codigo,
+          label: item.nombre,
+          stock: item.cantidad,
+          price: item.precio
+        }));
+        setOptions(results);
+      }
+      ).catch((err) => {
+        if (err.name === 'AbortError') {
+          console.log('Fetch aborted');
+        } else {
+          console.error(err);
+        }
+      }
+      );
+  };
 
   return (
     <Autocomplete
       id="products-search"
       value={product}
       disablePortal={false}
-        options={
-            supplierId ? suppliers.find(supplier => supplier.id === supplierId).products.map((option) => {
-                return {
-                    value: option.id,
-                    label: option.name,
-                };
-            }) : []
+      options={options}
+      onChange={(event, newValue) => {
+        setProduct(newValue?.label || '');
+        setProductId(newValue?.value || '')
+        if (newValue?.value) setListProducts([
+          {
+            id: newValue?.value,
+            name: newValue?.label,
+            stock: newValue?.stock,
+            price: newValue?.price
+          }
+        ])
+      }}
+      onInputChange={(event, newInputValue) => {
+        if (newInputValue !== '') setProduct(newInputValue);
+        if (event) {
+          setProductId('');
+          if (event?.target?.value?.length > 2) {
+            getDataAutocomplete(event.target.value);
+          }
+          else {
+            setOptions([]);
+          }
         }
-     onChange={(event, newValue) => {
-        if(newValue === null) return ''
-        setProduct(newValue);
-        setProductId(newValue.value)
-        setListProducts([...suppliers.find(supplier => supplier.id === supplierId).products.filter(product => product.id === newValue.value)])
-      }} 
+
+      }}
       noOptionsText="No suppliers found"
       selectOnFocus
       clearOnBlur

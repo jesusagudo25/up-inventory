@@ -7,12 +7,12 @@ import { CartContext } from '../../contexts/CartContext.js'
 
 export const Cart = () => {
 
-    const { listProducts, setListProducts, quantity, setQuantity, setProduct, setProductId } = React.useContext(CartContext)
+    const { listProducts, setListProducts, quantity, setQuantity, setProduct, setProductId, setTotal } = React.useContext(CartContext)
     return (
         <TableBody>
             {
                 listProducts.length > 0 ? listProducts.map((row) => {
-                    const { id, name, price } = row;
+                    const { id, name, price, stock } = row;
                     return (
                         <TableRow key={id}>
                             <TableCell align="left">
@@ -21,18 +21,19 @@ export const Cart = () => {
                                 </Typography>
                             </TableCell>
                             <TableCell align="left">
-                                <FormControl sx={{ width: '50%' }}>
+                                <FormControl sx={{ width: '25%' }}>
                                     <TextField
                                         id="quantity"
                                         label="Quantity"
                                         type="number"
                                         value={quantity}
                                         onChange={(e) => {
-                                            e.target.value > 1000 ? setQuantity(1000) : e.target.value < 1 ? setQuantity(1) : setQuantity(e.target.value)
-
+                                            e.target.value > stock ? setQuantity(stock) : e.target.value < 1 ? setQuantity(1) : setQuantity(e.target.value)
+                                            setTotal((price * e.target.value).toFixed(2))
                                         }}
                                     />
                                 </FormControl>
+                                /{stock}
                             </TableCell>
                             <TableCell align="left">
                                 <Typography variant="subtitle2" noWrap>
@@ -47,7 +48,7 @@ export const Cart = () => {
                             <TableCell align="right" width="5%">
                                 <IconButton size="large" color="inherit" onClick={() => {
                                     setListProducts([...listProducts.filter(product => product.id !== id)])
-                                    setQuantity(1)
+                                    setQuantity('')
                                     setProduct('')
                                     setProductId('')
                                 }} >

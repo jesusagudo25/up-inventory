@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 // material
 import { Autocomplete, TextField } from '@mui/material';
 
@@ -6,40 +6,66 @@ import { SupplierContext } from '../../contexts/SupplierContext';
 
 export const SearchSuppliers = () => {
 
-  const { supplier
-    , setSupplier,
+  const { 
+    supplier,
+    setSupplier,
     setSupplierId
   } = React.useContext(SupplierContext)
 
-  const [suppliers, setSuppliers] = React.useState([])
+  const previousController = useRef();
 
-  const getSuppliers = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/mock/suppliers.json`)
-      .then(response => response.json())
-      .then(data => {
-        setSuppliers(data)
-      })
-  }
+  const [options, setOptions] = React.useState([]);
 
-  React.useEffect(() => {
-    getSuppliers()
-  }, [])
+  const getDataAutocomplete = (searchTerm) => {
+    if (previousController.current) {
+      previousController.current.abort();
+    }
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+    previousController.current = controller;
+
+    fetch(`${process.env.REACT_APP_API_URL}/ms-buscador/proveedores?nombre=${searchTerm}`, { signal })
+      .then((res) => res.json())
+      .then((data) => {
+        const results = data.map((item) => ({
+          value: item.id,
+          label: item.nombre,
+        }));
+        setOptions(results);
+      }
+      ).catch((err) => {
+        if (err.name === 'AbortError') {
+          console.log('Fetch aborted');
+        } else {
+          console.error(err);
+        }
+      }
+      );
+  };
 
   return (
     <Autocomplete
       id="suppliers-search"
       value={supplier}
       disablePortal={false}
-      options={suppliers.map((option) => {
-        return {
-          value: option.id,
-          label: option.name,
-        };
-      } )}
+      options={options}
        onChange={(event, newValue) => {
-        if(newValue === null) return ''
-        setSupplier(newValue);
-        setSupplierId(newValue.value)
+        setSupplier(newValue?.label || '');
+        setSupplierId(newValue?.value || '');
+      }}
+      onInputChange={(event, newInputValue) => {
+        if (newInputValue !== '') setSupplier(newInputValue);
+        if (event) {
+          setSupplierId('');
+          if (event?.target?.value?.length > 2) {
+            getDataAutocomplete(event.target.value);
+          }
+          else {
+            setOptions([]);
+          }
+        }
+
       }}
       noOptionsText="No suppliers found"
       selectOnFocus

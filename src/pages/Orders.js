@@ -32,7 +32,8 @@ export const Orders = () => {
   const [listProducts, setListProducts] = React.useState([])
   const [productId, setProductId] = React.useState('')
   const [product, setProduct] = React.useState('')
-  const [quantity, setQuantity] = React.useState(1)
+  const [quantity, setQuantity] = React.useState('')
+  const [total, setTotal] = React.useState('')
   const [date, setDate] = React.useState(new Date())
 
   return (
@@ -100,7 +101,7 @@ export const Orders = () => {
                     headLabel={TABLE_HEAD}
                   />
                   <CartContext.Provider value={{
-                    listProducts, setListProducts, quantity, setQuantity, setProduct, setProductId
+                    listProducts, setListProducts, quantity, setQuantity, setProduct, setProductId, setTotal
                   }}>
                     <Cart />
                   </CartContext.Provider>
@@ -111,16 +112,39 @@ export const Orders = () => {
           {
             listProducts.length > 0 &&
             <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: '30px', }}>
-              <Button variant="contained" color="primary" onClick={() => {
-                setOpen(true);
-                /* Reset  */
-                setSupplier('')
-                setSupplierId('')
-                setListProducts([])
-                setProductId('')
-                setProduct('')
-                setQuantity(1)
-                setDate(new Date())
+              <Button variant="contained" color="primary" onClick={async () => {
+                const data = {
+                  proveedorId: supplierId,
+                  productoProveedorId: productId,
+                  cantidad: quantity,
+                  fecha: date.toISOString(),
+                  total,
+                }
+                if(quantity > 0){
+
+                  await fetch(`${process.env.REACT_APP_API_URL}/ms-operador/ordenes`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                  })
+                    .then(response => response.json())
+                    .then(data => {
+                      setOpen(true);
+                      /* Reset  */
+                      setSupplier('')
+                      setSupplierId('')
+                      setListProducts([])
+                      setProductId('')
+                      setProduct('')
+                      setTotal('')
+                      setQuantity('')
+                      setDate(new Date())
+                    });
+                  }else{
+                    alert('The quantity must be greater than 0')
+                  }
               }}>
                 Save
               </Button>
@@ -175,23 +199,6 @@ export const Orders = () => {
               fontWeight: '600',
               marginTop: 2,
             }}> Order created successfully</Typography>
-
-            <Typography variant="h6" sx={{
-              marginY: 2,
-              fontWeight: '400'
-            }}>You can download the order in PDF format</Typography>
-
-
-            <Button variant="contained"
-              size='large'
-              sx={{
-                width: '25%',
-              }}
-              color="error"
-              startIcon={<Iconify icon="mdi:file-pdf" />}
-            >
-              Download
-            </Button>
 
           </Stack>
 
